@@ -1,0 +1,118 @@
+<app-navbar></app-navbar>
+
+<div class="container mx-auto my-16">
+  <h1 class="text-5xl mt-0 mb-5">Maliakademy Password Manager</h1>
+  <p class="mb-5">
+    It is a long established fact that a reader will be distracted by the
+    readable content of a page when looking at its layout. The point of using
+    Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
+    opposed to using 'Content here, content here', making it look like readable
+    English. Many desktop publishing packages and web page editors now use Lorem
+    Ipsum as their default model text, and a search for 'lorem ipsum' will
+    uncover many web sites still in their infancy. Various versions have evolved
+    over the years, sometimes by accident, sometimes on purpose (injected humour
+    and the like).
+  </p>
+  <button
+    class="mb-5 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+  >
+    Add New Site
+  </button>
+
+  <!-- * alert -->
+
+  <div *ngIf="isSuccess" class="p-5 my-3 bg-teal-100 text-teal-900">
+    {{ successMessage }}
+  </div>
+
+  <!-- * Add New Site Form -->
+
+  <div class="px-20 py-10 mb-10 my-5 border-4 border-gray-900">
+    <h2 class="text-3xl text-center">{{ formState }} Site</h2>
+    <p class="text-center">You can add a new site from the below form</p>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Site Name</label>
+        <input
+          [(ngModel)]="siteName"
+          type="text"
+          name="siteName"
+          class="border-2 border-gray-900 p-2 rounded-lg w-full"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Site URL</label>
+        <input
+          [(ngModel)]="siteUrl"
+          type="text"
+          name="siteUrl"
+          class="border-2 border-gray-900 p-2 rounded-lg w-full"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Site Image URL</label>
+        <input
+          [(ngModel)]="siteImgUrl"
+          type="text"
+          name="siteImgUrl"
+          class="border-2 border-gray-900 p-2 rounded-lg w-full"
+        />
+      </div>
+
+      <button
+        class="mt-10 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+      >
+        {{ formState }} Site
+      </button>
+
+      <button
+        class="mt-10 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
+
+  <div class="grid grid-cols-4 gap-5">
+    <div
+      *ngFor="let site of allSites | async"
+      class="shadow-lg border-2 border-gray-900"
+    >
+      <img [src]="site.siteImgUrl" alt="" />
+      <h3 class="p-3 text-xl font-bold">{{ site.siteName }}</h3>
+      <div
+        class="grid place-content-center w-auto m-3 px-3 bg-blue-200 text-blue-800 rounded-lg text-sm"
+      >
+        {{ site.siteUrl }}
+      </div>
+      <button
+        routerLink="/password-list"
+        [queryParams]="{
+          id: site.id,
+          siteName: site.siteName,
+          siteUrl: site.siteUrl,
+          siteImgUrl: site.siteImgUrl
+        }"
+        class="my-3 ml-3 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md"
+      >
+        Add New Password
+      </button>
+      <button
+        (click)="
+          editSite(site.siteName, site.siteUrl, site.siteImgUrl, site.id)
+        "
+        class="my-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md"
+      >
+        Edit
+      </button>
+      <button
+        (click)="deleteSite(site.id)"
+        class="my-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
